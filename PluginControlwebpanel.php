@@ -9,7 +9,7 @@ class PluginControlwebpanel extends ServerPlugin
         'packageName' => true,
         'testConnection' => true,
         'showNameservers' => false,
-        'directlink' => true
+        'directlink' => false
     ];
 
     public function getVariables()
