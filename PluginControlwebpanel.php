@@ -229,9 +229,12 @@ class PluginControlwebpanel extends ServerPlugin
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://' . $args['server']['variables']['ServerHostName'] . ':2304' . $action);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
+        $caPathOrFile = \Composer\CaBundle\CaBundle::getSystemCaRootBundlePath();
+        if (is_dir($caPathOrFile)) {
+            curl_setopt($ch, CURLOPT_CAPATH, $caPathOrFile);
+        } else {
+            curl_setopt($ch, CURLOPT_CAINFO, $caPathOrFile);
+        }
         switch ($method) {
             case 'GET':
                 break;
@@ -249,6 +252,11 @@ class PluginControlwebpanel extends ServerPlugin
         }
 
         $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            throw new CE_Exception('CWP connection error: ' . curl_error($ch));
+        }
+
         // We can not json_decode this, it has to be done in the calling function, as the API likes to add garbag to some responses.
         return $response;
     }
