@@ -8,7 +8,7 @@ class PluginControlwebpanel extends ServerPlugin
     public $features = [
         'packageName' => true,
         'testConnection' => true,
-        'showNameservers' => false,
+        'showNameservers' => true,
         'directlink' => false
     ];
 
